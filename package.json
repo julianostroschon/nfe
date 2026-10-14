@@ -1,0 +1,62 @@
+{
+  "name": "nfse-national-service",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "packageManager": "pnpm@9.14.2",
+  "scripts": {
+    "build": "nest build",
+    "start": "ts-node src/main.ts",
+    "start:prod": "node dist/src/main.js",
+    "typecheck": "node node_modules/typescript/bin/tsc --noEmit",
+    "test": "jest --runInBand",
+    "test:e2e": "jest --runInBand --config jest.e2e.config.cjs",
+    "prisma:generate": "prisma generate",
+    "prisma:validate": "prisma validate",
+    "db:deploy": "prisma migrate deploy",
+    "simulador-nfse": "ts-node scripts/simulador-nfse.ts",
+    "gerar-certificados-teste": "ts-node scripts/gerar-certificados-teste.ts",
+    "swagger:generate": "GENERATE_SWAGGER=true ts-node src/main.ts",
+    "ambiente-teste": "ts-node scripts/ambiente-teste.ts",
+    "verify": "pnpm isolamento:validate && pnpm prisma:validate && pnpm typecheck && pnpm test && pnpm test:e2e",
+    "isolamento:validate": "ts-node scripts/verificar-isolamento.ts",
+    "format:check": "biome format src scripts tests package.json tsconfig.json tsconfig.build.json nest-cli.json biome.json prisma.config.ts jest.config.cjs jest.e2e.config.cjs"
+  },
+  "dependencies": {
+    "@nestjs/bull": "^11.0.3",
+    "@nestjs/common": "^11.0.1",
+    "@nestjs/config": "^4.0.2",
+    "@nestjs/core": "^11.0.1",
+    "@nestjs/platform-express": "^11.0.1",
+    "@nestjs/swagger": "^11.2.0",
+    "@prisma/adapter-mariadb": "7.7.0",
+    "@prisma/client": "7.7.0",
+    "bull": "^4.16.5",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.2",
+    "dotenv": "^16.5.0",
+    "express": "^5.2.1",
+    "node-forge": "^1.4.0",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2",
+    "xml-crypto": "^6.1.2"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.4.8",
+    "@nestjs/cli": "^11.0.0",
+    "@nestjs/testing": "^11.0.1",
+    "@types/express": "^5.0.0",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.0.0",
+    "@types/node-forge": "^1.3.14",
+    "@types/supertest": "^6.0.3",
+    "jest": "^29.7.0",
+    "prisma": "7.7.0",
+    "supertest": "^7.1.1",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}

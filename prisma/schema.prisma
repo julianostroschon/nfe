@@ -1,0 +1,153 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum Environment {
+  HOMOLOGATION
+  PRODUCTION
+}
+
+enum InvoiceStatus {
+  PENDING
+  AUTHORIZED
+  REJECTED
+  CANCELED
+}
+
+enum CertificateStatus {
+  ACTIVE
+  REPLACED
+  REVOKED
+}
+
+enum TaskStatus {
+  PENDING
+  PROCESSING
+  DONE
+  FAILED
+}
+
+enum TaskKind {
+  ISSUE
+  CANCEL
+  WEBHOOK
+}
+
+model FiscalCertificate {
+  id String @id @default(uuid()) @db.Char(36)
+  cnpj String @db.Char(14)
+  subjectName String @db.VarChar(250)
+  validFrom DateTime @db.DateTime(3)
+  validUntil DateTime @db.DateTime(3)
+  fingerprint String @db.Char(64)
+  fileCipher String @db.LongText
+  passwordCipher String @db.Text
+  status CertificateStatus @default(ACTIVE)
+  activeSlot String @default("active") @db.VarChar(36)
+  createdAt DateTime @default(now()) @db.DateTime(3)
+  updatedAt DateTime @updatedAt @db.DateTime(3)
+  invoices FiscalInvoice[]
+  @@unique([cnpj, activeSlot])
+  @@map("fiscal_certificates")
+}
+
+model FiscalCityConfig {
+  id String @id @default(uuid()) @db.Char(36)
+  cnpj String @db.Char(14)
+  cityCode Int @db.UnsignedInt
+  environment Environment
+  enabled Boolean @default(false)
+  series String @default("1") @db.VarChar(5)
+  cancellationWindowDays Int? @db.UnsignedSmallInt
+  webhookUrl String? @db.VarChar(2048)
+  webhookSecretCipher String? @db.Text
+  createdAt DateTime @default(now()) @db.DateTime(3)
+  updatedAt DateTime @updatedAt @db.DateTime(3)
+  @@unique([cnpj, cityCode, environment])
+  @@map("fiscal_city_configs")
+}
+
+model FiscalDpsSequence {
+  cnpj String @db.Char(14)
+  environment Environment
+  series String @db.VarChar(5)
+  nextNumber Int @default(1) @db.UnsignedInt
+  @@id([cnpj, environment, series])
+  @@map("fiscal_dps_sequences")
+}
+
+model FiscalInvoice {
+  id String @id @default(uuid()) @db.Char(36)
+  cnpj String @db.Char(14)
+  environment Environment
+  externalId String @db.VarChar(200)
+  idempotencyKey String @db.VarChar(200)
+  requestHash String @db.Char(64)
+  request Json
+  cityCode Int @db.UnsignedInt
+  series String @db.VarChar(5)
+  number Int @db.UnsignedInt
+  dpsId String @db.Char(42)
+  issuedAt DateTime @db.DateTime(3)
+  signedDpsXml String @db.LongText
+  certificateId String @db.Char(36)
+  certificate FiscalCertificate @relation(fields: [certificateId], references: [id], onDelete: Restrict)
+  status InvoiceStatus @default(PENDING)
+  accessKey String? @db.VarChar(60)
+  authorizedXml String? @db.LongText
+  authorizedAt DateTime? @db.DateTime(3)
+  cancellationKey String? @db.VarChar(200)
+  cancellationHash String? @db.Char(64)
+  cancellationRequest Json?
+  cancellationStatus String? @db.VarChar(20)
+  signedCancellationXml String? @db.LongText
+  cancellationEventXml String? @db.LongText
+  webhookUrl String? @db.VarChar(2048)
+  webhookSecretCipher String? @db.Text
+  lastError String? @db.VarChar(1000)
+  attemptCount Int @default(0) @db.UnsignedInt
+  createdAt DateTime @default(now()) @db.DateTime(3)
+  updatedAt DateTime @updatedAt @db.DateTime(3)
+  events FiscalEvent[]
+  tasks FiscalTask[]
+  @@unique([cnpj, environment, idempotencyKey])
+  @@unique([cnpj, environment, series, number])
+  @@unique([environment, dpsId])
+  @@index([cnpj, status])
+  @@map("fiscal_invoices")
+}
+
+model FiscalEvent {
+  id String @id @default(uuid()) @db.Char(36)
+  invoiceId String @db.Char(36)
+  invoice FiscalInvoice @relation(fields: [invoiceId], references: [id], onDelete: Restrict)
+  type String @db.VarChar(50)
+  code String? @db.VarChar(30)
+  message String? @db.VarChar(1000)
+  createdAt DateTime @default(now()) @db.DateTime(3)
+  @@index([invoiceId, createdAt])
+  @@map("fiscal_events")
+}
+
+/// Intenção persistida antes da publicação no Redis; também registra entregas HMAC.
+model FiscalTask {
+  id String @id @default(uuid()) @db.Char(36)
+  invoiceId String @db.Char(36)
+  invoice FiscalInvoice @relation(fields: [invoiceId], references: [id], onDelete: Restrict)
+  kind TaskKind
+  status TaskStatus @default(PENDING)
+  payload Json?
+  attempts Int @default(0) @db.UnsignedInt
+  availableAt DateTime @default(now()) @db.DateTime(3)
+  lockUntil DateTime? @db.DateTime(3)
+  lockOwner String? @db.Char(36)
+  lastError String? @db.VarChar(1000)
+  createdAt DateTime @default(now()) @db.DateTime(3)
+  updatedAt DateTime @updatedAt @db.DateTime(3)
+  @@index([status, availableAt])
+  @@map("fiscal_tasks")
+}

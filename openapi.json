@@ -1,0 +1,1329 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/health": {
+      "get": {
+        "operationId": "HealthController_health",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Verificar conexão com MySQL e Redis",
+        "tags": [
+          "Saúde"
+        ]
+      }
+    },
+    "/certificates": {
+      "post": {
+        "operationId": "CertificatesController_create",
+        "parameters": [
+          {
+            "name": "X-Emitter-Cnpj",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCertificateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CertificateResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "summary": "Cadastrar A1 e substituir o certificado ativo",
+        "tags": [
+          "Certificados"
+        ]
+      },
+      "get": {
+        "operationId": "CertificatesController_list",
+        "parameters": [
+          {
+            "name": "X-Emitter-Cnpj",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CertificateResponse"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "summary": "Listar metadados de certificados",
+        "tags": [
+          "Certificados"
+        ]
+      }
+    },
+    "/certificates/{id}": {
+      "get": {
+        "operationId": "CertificatesController_find",
+        "parameters": [
+          {
+            "name": "X-Emitter-Cnpj",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CertificateResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "summary": "Consultar metadados de um certificado",
+        "tags": [
+          "Certificados"
+        ]
+      },
+      "patch": {
+        "operationId": "CertificatesController_update",
+        "parameters": [
+          {
+            "name": "X-Emitter-Cnpj",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCertificateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CertificateResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "summary": "Revogar uso do certificado; renovação usa POST",
+        "tags": [
+          "Certificados"
+        ]
+      },
+      "delete": {
+        "operationId": "CertificatesController_remove",
+        "parameters": [
+          {
+            "name": "X-Emitter-Cnpj",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "summary": "Revogar material e preservar referência fiscal",
+        "tags": [
+          "Certificados"
+        ]
+      }
+    },
+    "/city-configs": {
+      "post": {
+        "operationId": "CityConfigsController_create",
+        "parameters": [
+          {
+            "name": "X-Emitter-Cnpj",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCityConfigDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CityConfigResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "summary": "Cadastrar município e ambiente",
+        "tags": [
+          "Configurações municipais"
+        ]
+      },
+      "get": {
+        "operationId": "CityConfigsController_list",
+        "parameters": [
+          {
+            "name": "X-Emitter-Cnpj",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CityConfigResponse"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "summary": "Listar configurações do emitente",
+        "tags": [
+          "Configurações municipais"
+        ]
+      }
+    },
+    "/city-configs/{id}": {
+      "get": {
+        "operationId": "CityConfigsController_find",
+        "parameters": [
+          {
+            "name": "X-Emitter-Cnpj",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CityConfigResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "summary": "Consultar configuração",
+        "tags": [
+          "Configurações municipais"
+        ]
+      },
+      "patch": {
+        "operationId": "CityConfigsController_update",
+        "parameters": [
+          {
+            "name": "X-Emitter-Cnpj",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCityConfigDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CityConfigResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "summary": "Atualizar configuração e destino do webhook",
+        "tags": [
+          "Configurações municipais"
+        ]
+      },
+      "delete": {
+        "operationId": "CityConfigsController_remove",
+        "parameters": [
+          {
+            "name": "X-Emitter-Cnpj",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "summary": "Excluir configuração; pedidos preservam o snapshot",
+        "tags": [
+          "Configurações municipais"
+        ]
+      }
+    },
+    "/invoices": {
+      "post": {
+        "operationId": "InvoicesController_create",
+        "parameters": [
+          {
+            "name": "X-Emitter-Cnpj",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInvoiceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Pedido persistido; resultado entregue por webhook",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "summary": "Solicitar emissão de NFS-e",
+        "tags": [
+          "Notas fiscais"
+        ]
+      }
+    },
+    "/invoices/{id}": {
+      "get": {
+        "operationId": "InvoicesController_find",
+        "parameters": [
+          {
+            "name": "X-Emitter-Cnpj",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "refresh",
+            "required": false,
+            "in": "query",
+            "description": "true consulta também a NFS-e e o evento no Emissor Nacional, sem alterar o snapshot local",
+            "schema": {
+              "enum": [
+                "true",
+                "false"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "summary": "Consultar pedido, documento fiscal, eventos e processamento",
+        "tags": [
+          "Notas fiscais"
+        ]
+      }
+    },
+    "/invoices/{id}/cancel": {
+      "post": {
+        "operationId": "InvoicesController_cancel",
+        "parameters": [
+          {
+            "name": "X-Emitter-Cnpj",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CancelInvoiceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "summary": "Solicitar evento de cancelamento",
+        "tags": [
+          "Notas fiscais"
+        ]
+      }
+    },
+    "/invoices/{id}/retry": {
+      "post": {
+        "operationId": "InvoicesController_retry",
+        "parameters": [
+          {
+            "name": "X-Emitter-Cnpj",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "summary": "Retomar tarefas que esgotaram tentativas, preservando a DPS",
+        "tags": [
+          "Notas fiscais"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Serviço NFS-e Nacional",
+    "description": "Emissão assíncrona, consulta e cancelamento por emitente. Informe X-Emitter-Cnpj em todas as operações autenticadas.",
+    "version": "0.1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "apiKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    },
+    "schemas": {
+      "CreateCertificateDto": {
+        "type": "object",
+        "properties": {
+          "pfxBase64": {
+            "type": "string",
+            "description": "Arquivo PKCS#12 em base64; limite de 1 MB",
+            "writeOnly": true
+          },
+          "password": {
+            "type": "string",
+            "writeOnly": true
+          }
+        },
+        "required": [
+          "pfxBase64",
+          "password"
+        ]
+      },
+      "CertificateResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "cnpj": {
+            "type": "string"
+          },
+          "subjectName": {
+            "type": "string"
+          },
+          "fingerprint": {
+            "type": "string"
+          },
+          "validFrom": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "validUntil": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ACTIVE",
+              "REPLACED",
+              "REVOKED"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "cnpj",
+          "subjectName",
+          "fingerprint",
+          "validFrom",
+          "validUntil",
+          "status",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "UpdateCertificateDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "REVOKED"
+            ]
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "CreateCityConfigDto": {
+        "type": "object",
+        "properties": {
+          "cityCode": {
+            "type": "number"
+          },
+          "environment": {
+            "type": "string",
+            "enum": [
+              "HOMOLOGATION",
+              "PRODUCTION"
+            ]
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "series": {
+            "type": "string",
+            "description": "Formato ilustrativo: 1"
+          },
+          "cancellationWindowDays": {
+            "type": "number"
+          },
+          "webhookUrl": {
+            "type": "string"
+          },
+          "webhookSecret": {
+            "type": "string",
+            "writeOnly": true
+          }
+        },
+        "required": [
+          "cityCode",
+          "environment",
+          "enabled",
+          "series"
+        ]
+      },
+      "CityConfigResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "cnpj": {
+            "type": "string"
+          },
+          "cityCode": {
+            "type": "number"
+          },
+          "environment": {
+            "type": "string",
+            "enum": [
+              "HOMOLOGATION",
+              "PRODUCTION"
+            ]
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "series": {
+            "type": "string"
+          },
+          "cancellationWindowDays": {
+            "type": "number",
+            "nullable": true
+          },
+          "webhookUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "cnpj",
+          "cityCode",
+          "environment",
+          "enabled",
+          "series",
+          "cancellationWindowDays",
+          "webhookUrl",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "UpdateCityConfigDto": {
+        "type": "object",
+        "properties": {
+          "cityCode": {
+            "type": "number"
+          },
+          "environment": {
+            "type": "string",
+            "enum": [
+              "HOMOLOGATION",
+              "PRODUCTION"
+            ]
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "series": {
+            "type": "string",
+            "description": "Formato ilustrativo: 1"
+          },
+          "cancellationWindowDays": {
+            "type": "number"
+          },
+          "webhookUrl": {
+            "type": "string"
+          },
+          "webhookSecret": {
+            "type": "string",
+            "writeOnly": true
+          }
+        }
+      },
+      "IssuerDto": {
+        "type": "object",
+        "properties": {
+          "cnpj": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "cityCode": {
+            "type": "number"
+          },
+          "municipalRegistration": {
+            "type": "string"
+          },
+          "simplesNacional": {
+            "type": "string",
+            "enum": [
+              "1",
+              "2",
+              "3"
+            ]
+          },
+          "simplesNacionalRegime": {
+            "type": "string",
+            "enum": [
+              "1",
+              "2",
+              "3"
+            ]
+          },
+          "specialTaxRegime": {
+            "type": "string",
+            "enum": [
+              "0",
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "9"
+            ]
+          }
+        },
+        "required": [
+          "cnpj",
+          "name",
+          "cityCode",
+          "simplesNacional",
+          "specialTaxRegime"
+        ]
+      },
+      "TakerDto": {
+        "type": "object",
+        "properties": {
+          "cnpj": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "cnpj",
+          "name"
+        ]
+      },
+      "ServiceDto": {
+        "type": "object",
+        "properties": {
+          "lc116Code": {
+            "type": "string",
+            "description": "Formato ilustrativo: 01.01"
+          },
+          "nationalServiceCode": {
+            "type": "string",
+            "description": "Formato ilustrativo: 010101"
+          },
+          "municipalTaxCode": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "issqnTaxation": {
+            "type": "string",
+            "enum": [
+              "1",
+              "2",
+              "3",
+              "4"
+            ]
+          },
+          "issRate": {
+            "type": "string",
+            "description": "Formato ilustrativo: 2.00"
+          },
+          "issWithheld": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "lc116Code",
+          "nationalServiceCode",
+          "description",
+          "issqnTaxation",
+          "issRate",
+          "issWithheld"
+        ]
+      },
+      "ValuesDto": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "string",
+            "description": "Formato ilustrativo: 1500.00"
+          },
+          "totalFederalTaxPercent": {
+            "type": "string",
+            "description": "Formato ilustrativo: 0.00"
+          },
+          "totalStateTaxPercent": {
+            "type": "string",
+            "description": "Formato ilustrativo: 0.00"
+          },
+          "totalMunicipalTaxPercent": {
+            "type": "string",
+            "description": "Formato ilustrativo: 0.00"
+          }
+        },
+        "required": [
+          "amount",
+          "totalFederalTaxPercent",
+          "totalStateTaxPercent",
+          "totalMunicipalTaxPercent"
+        ]
+      },
+      "CreateInvoiceDto": {
+        "type": "object",
+        "properties": {
+          "externalId": {
+            "type": "string"
+          },
+          "environment": {
+            "type": "string",
+            "enum": [
+              "HOMOLOGATION",
+              "PRODUCTION"
+            ]
+          },
+          "issuer": {
+            "$ref": "#/components/schemas/IssuerDto"
+          },
+          "taker": {
+            "$ref": "#/components/schemas/TakerDto"
+          },
+          "serviceCityCode": {
+            "type": "number"
+          },
+          "competency": {
+            "type": "string",
+            "description": "Formato ilustrativo: 2026-10-01"
+          },
+          "service": {
+            "$ref": "#/components/schemas/ServiceDto"
+          },
+          "values": {
+            "$ref": "#/components/schemas/ValuesDto"
+          }
+        },
+        "required": [
+          "externalId",
+          "environment",
+          "issuer",
+          "taker",
+          "serviceCityCode",
+          "competency",
+          "service",
+          "values"
+        ]
+      },
+      "FiscalEventResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "code",
+          "message",
+          "createdAt"
+        ]
+      },
+      "FiscalTaskResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "ISSUE",
+              "CANCEL",
+              "WEBHOOK"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "PROCESSING",
+              "DONE",
+              "FAILED"
+            ]
+          },
+          "attempts": {
+            "type": "number"
+          },
+          "lastError": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "status",
+          "attempts",
+          "lastError"
+        ]
+      },
+      "NationalLookupResponse": {
+        "type": "object",
+        "properties": {
+          "exists": {
+            "type": "boolean"
+          },
+          "accessKey": {
+            "type": "string"
+          },
+          "authorizedXml": {
+            "type": "string"
+          },
+          "canceled": {
+            "type": "boolean"
+          },
+          "cancellationEventXml": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "exists"
+        ]
+      },
+      "InvoiceResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "cnpj": {
+            "type": "string"
+          },
+          "environment": {
+            "type": "string",
+            "enum": [
+              "HOMOLOGATION",
+              "PRODUCTION"
+            ]
+          },
+          "externalId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "AUTHORIZED",
+              "REJECTED",
+              "CANCELED"
+            ]
+          },
+          "request": {
+            "$ref": "#/components/schemas/CreateInvoiceDto"
+          },
+          "dpsId": {
+            "type": "string"
+          },
+          "series": {
+            "type": "string"
+          },
+          "number": {
+            "type": "number"
+          },
+          "accessKey": {
+            "type": "string",
+            "nullable": true
+          },
+          "authorizedXml": {
+            "type": "string",
+            "nullable": true
+          },
+          "authorizedAt": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time"
+          },
+          "cancellationStatus": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "PENDING",
+              "CONFIRMED",
+              "REJECTED"
+            ]
+          },
+          "cancellationEventXml": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastError": {
+            "type": "string",
+            "nullable": true
+          },
+          "attemptCount": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FiscalEventResponse"
+            }
+          },
+          "tasks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FiscalTaskResponse"
+            }
+          },
+          "national": {
+            "$ref": "#/components/schemas/NationalLookupResponse"
+          }
+        },
+        "required": [
+          "id",
+          "cnpj",
+          "environment",
+          "externalId",
+          "status",
+          "request",
+          "dpsId",
+          "series",
+          "number",
+          "accessKey",
+          "authorizedXml",
+          "authorizedAt",
+          "cancellationStatus",
+          "cancellationEventXml",
+          "lastError",
+          "attemptCount",
+          "createdAt",
+          "updatedAt",
+          "events",
+          "tasks"
+        ]
+      },
+      "CancelInvoiceDto": {
+        "type": "object",
+        "properties": {
+          "reasonCode": {
+            "type": "string",
+            "enum": [
+              "1",
+              "2",
+              "9"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "reasonCode",
+          "reason"
+        ]
+      }
+    }
+  }
+}

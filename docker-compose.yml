@@ -1,0 +1,53 @@
+services:
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: fiscal
+      MYSQL_USER: fiscal
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?Configure MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Configure MYSQL_ROOT_PASSWORD}
+    ports:
+      - "127.0.0.1:${MYSQL_PORT:-3307}:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+  redis:
+    image: redis:7.4-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "127.0.0.1:${REDIS_PORT:-6380}:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 15
+  api:
+    profiles: ["app"]
+    build: .
+    env_file: .env
+    environment:
+      PORT: 3000
+      DATABASE_URL: mysql://fiscal:${MYSQL_PASSWORD}@mysql:3306/fiscal
+      REDIS_URL: redis://redis:6379
+      NFSE_BASE_URL_OVERRIDE: ${NFSE_BASE_URL_OVERRIDE:-}
+    ports:
+      - "127.0.0.1:${PORT:-3000}:3000"
+    depends_on:
+      mysql: { condition: service_healthy }
+      redis: { condition: service_healthy }
+  simulator:
+    profiles: ["simulator"]
+    image: nfse-extraction-api
+    build: .
+    command: ["node", "dist/scripts/simulador-nfse.js", "--host", "0.0.0.0", "--porta", "8443"]
+    ports:
+      - "127.0.0.1:8443:8443"
+volumes:
+  mysql-data:
+  redis-data:

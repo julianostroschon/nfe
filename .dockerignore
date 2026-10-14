@@ -1,0 +1,10 @@
+node_modules
+.env
+.env.*
+tmp
+dist
+coverage
+.git
+*.pfx
+*.p12
+*.pem
