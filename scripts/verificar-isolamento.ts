@@ -21,7 +21,7 @@ const forbidden = new RegExp(
   ].join('|'),
   'i',
 );
-const excluded = new Set(['node_modules', 'dist', 'tmp', 'coverage', '.git', '.env']);
+const excluded = new Set(['node_modules', 'dist', 'tmp', 'coverage', '.git', '.env', '.specs']);
 const matches: string[] = [];
 function scan(directory: string) {
   for (const entry of readdirSync(directory, { withFileTypes: true })) {

@@ -8,3 +8,4 @@ coverage
 *.pfx
 *.p12
 *.pem
+.specs

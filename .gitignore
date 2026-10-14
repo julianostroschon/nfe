@@ -6,3 +6,6 @@ coverage/
 *.pfx
 *.p12
 *.pem
+
+# Cópia de trabalho preservada fora do repositório publicado.
+.specs/
