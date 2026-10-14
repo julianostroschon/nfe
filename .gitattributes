@@ -1,0 +1,4 @@
+# Preservar os bytes e a formatação dos schemas oficiais de terceiros.
+schemas/**/*.xsd -text -whitespace
+# A migration gerada pode encerrar com uma linha vazia.
+prisma/migrations/**/*.sql whitespace=-blank-at-eof
